@@ -1,6 +1,7 @@
 import json
 import jsonlines
 from nltk.tag import StanfordNERTagger
+import logging
 
 # read the file into memory
 # path_remote = "/home/entitylinking/confluenceRWP/"
@@ -37,6 +38,7 @@ with jsonlines.open("reliefweb_corpus_raw_20160331_eng.jsonl") as reader:
             writer.write(temp_obj)
             counter += 1
             print "finished tagging " + str(counter) + " / 426016 docs"
+            logging.info("finished tagging " + str(counter) + " / 426016 docs")
 
 # with open("tagged_raw.json", "w") as f:
 #     json.dump(tagged_raw, f)
