@@ -44,3 +44,6 @@ with jsonlines.open("reliefweb_corpus_raw_20160331_eng.jsonl") as reader:
 
 # with open("tagged_raw.json", "w") as f:
 #     json.dump(tagged_raw, f)
+
+
+# '''java -mx600m -cp "*:lib/*" edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile sample2.txt'''
