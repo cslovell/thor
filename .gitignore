@@ -2,3 +2,7 @@ reliefweb_corpus_raw_20160331.json
 reliefweb_corpus_raw_20160331.jsonl
 reliefweb_corpus_raw_20160331_eng.jsonl
 eng_tagged_raw_reliefweb.jsonl
+eng_tagged_raw_reliefweb_spacy_10k.jsonl
+eng_tagged_raw_reliefweb_spacy_full.jsonl
+back/
+check/
