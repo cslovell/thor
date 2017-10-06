@@ -87,7 +87,7 @@ def get_param_comb_list(param):
 (param_comb_list, param_cates) = get_param_comb_list(param_dict)
 
 placeholder = [0 for i in y]
-result_matrix = [placeholder for i in range(param_comb_list)]
+result_matrix = [placeholder for i in param_comb_list]
 
 total_p = len(param_comb_list)
 count_p = 0
