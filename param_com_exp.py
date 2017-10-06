@@ -173,3 +173,5 @@ for p_ind, p in enumerate(param_comb_list):
     count_p += 1
     print str(count_p) + " / " + str(total_p) + " param combs finished"
 
+with open("result_matrix.json", "w") as f:
+    f.write(json.dumps(result_matrix))
