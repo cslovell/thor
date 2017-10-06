@@ -1,0 +1,13 @@
+{
+	"X_data_labeled": "X_data_labeled.json",
+    "X_data_unlabeled": "X_data_unlabeled.json",
+    "y_data": "y_rawlabels_dev.json",
+    "id_data": "ids_raw_dev.json",
+	"param_dict": {
+	    "wordNgrams": [1, 2, 3, 4, 5], 
+	    "lr": [0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0], 
+	    "ws": [5, 8] 
+	},
+    "num_labels": 19,
+    "fasttext_dir": "/home/entitylinking/fastText"
+}
