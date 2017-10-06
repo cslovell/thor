@@ -171,7 +171,8 @@ for p_ind, p in enumerate(param_comb_list):
                 index += 1
 
     count_p += 1
-    print str(count_p) + " / " + str(total_p) + " param combs finished"
+    with open("track1/" + str(count_p), "w") as fi:
+        fi.write("ok")
 
 with open("result_matrix.json", "w") as f:
     f.write(json.dumps(result_matrix))
