@@ -24,7 +24,6 @@ def ndcg_score(pred_labels, corr_labels):
     scores = [0 for i in pred_labels]
     for i in corr_labels:
         scores[pred_labels.index(i)] = 1
-    print scores
     dcg = 0
     for idx, score in enumerate(scores):
         dcg += score / np.log2(idx + 1 + 1)
@@ -86,15 +85,15 @@ def get_param_comb_list(param):
 
 (param_comb_list, param_cates) = get_param_comb_list(param_dict)
 
-placeholder = [0 for i in y]
-result_matrix = [placeholder for i in param_comb_list]
+result_matrix = [[0 for j in y] for i in param_comb_list]
 
 total_p = len(param_comb_list)
 count_p = 0
 for p_ind, p in enumerate(param_comb_list):
 
-    # p = (1, 0.05, 5)
-    param_cates = ["wordNgrams", "lr", "ws"]
+    # fasttext_dir = "/Users/ZhangHaotian/fastText"
+    # p = (3, 0.1, 8)
+    # param_cates = ["wordNgrams", "lr", "ws"]
 
     # if param_cates[0] == "preprocess":
     #     pass # add preprocess lines here
@@ -112,6 +111,7 @@ for p_ind, p in enumerate(param_comb_list):
     kf = KFold(n_splits=10)
 
     count = 0
+    # tempres2 = [0 for i in range(29912)] ###
     for train_index, test_index in kf.split(X_labeled):
         # compose training set based on train_index
         # train_index, test_index = next(kf.split(X_labeled)) ##
@@ -146,16 +146,18 @@ for p_ind, p in enumerate(param_comb_list):
                 f.write(line)
                 f.write("\n")
 
-        print "data composed..."
-
-        # training and testing
-        print "training and evaluating..."
-        os.system(cmd_p + " > exec.txt")
         try:
-            os.remove("lbl.txt")
+            os.remove(fasttext_dir + "/model.bin")
+        except:
+            pass
+        os.system(cmd_p)
+
+        try:
+            os.remove(fasttext_dir + "/lbl.txt")
         except:
             pass
         os.system(fasttext_dir + "/fasttext predict-prob model.bin test.texts.txt " + str(num_labels) + " > lbl.txt")
+
         with open("lbl.txt") as f:
             index = 0
             for l in f.readlines():
@@ -174,5 +176,5 @@ for p_ind, p in enumerate(param_comb_list):
     with open("track1/" + str(count_p), "w") as fi:
         fi.write("ok")
 
-with open("result_matrix.json", "w") as f:
+with open("result_matrix_correct.json", "w") as f: ##need change
     f.write(json.dumps(result_matrix))
