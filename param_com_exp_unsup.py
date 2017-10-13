@@ -127,7 +127,7 @@ for p_ind, p in enumerate(param_comb_list):
     os.system(cmd_p)
 
     # compute vector representations for docs
-    os.system("./fasttext print-sentence-vectors model.bin < data.unsup_all.txt > raw.txt")
+    os.system(fasttext_dir + "/fasttext print-sentence-vectors model.bin < data.unsup_all.txt > raw.txt")
 
     # after having the text+vector, get the vector
     f = open("raw.txt", "r")
@@ -151,7 +151,7 @@ for p_ind, p in enumerate(param_comb_list):
 
     #
     kf = KFold(n_splits=10)
-    for train_index, test_index in kf.split(y):
+    for train_index, test_index in kf.split(vec_X_dev):
         X_train = [vec_X_dev[i] for i in train_index]
         y_train = [bin_y_dev_list[i] for i in train_index]
         X_test = [vec_X_dev[i] for i in test_index]
