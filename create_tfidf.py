@@ -147,10 +147,19 @@ class MTokenizer(object):
 
 table = tfidf2()
 with jsonlines.open("reliefweb_corpus_raw_20160331_eng_duprm.jsonl") as reader:
+    count = 0
     for obj in reader:
         table.addDocument(obj["id"], MTokenizer.tokenize_string(obj["text"]))
+        count += 1
+        if count % 10 == 0:
+            print count
 
 table.prep()
+print "prep ready"
+
+res = table.documents
+
+print "size of output" + str(len(res))
 
 with open("tfidf_all.json", "w") as f:
-    f.write(json.dumps(table.documents))
+    f.write(json.dumps(res))
