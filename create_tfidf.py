@@ -54,11 +54,9 @@ class tfidf2(object):
         self.documents[doc][i] *= self.idf[i]
     self.prepStatus = True
 
-  def get_tfidf(self):
-      if self.prepStatus:
-          return self.documents
-      else:
-          print "not prepared"
+    ans = self.documents
+
+    return ans
 
 
 
@@ -102,15 +100,15 @@ with jsonlines.open("reliefweb_corpus_raw_20160331_eng_duprm.jsonl") as reader:
 with open("track1/" + "finish_load", "w") as fi:
     fi.write("ok")
 
-table.prep()
-
-with open("track1/" + "finish_perp", "w") as fi:
-    fi.write("ok")
-
-res = table.get_tfidf()
+res = table.prep()
 
 with open("track1/" + "finish_len_" + str(len(res)), "w") as fi:
     fi.write("ok")
 
-with open("tfidf_all.json", "w") as f:
-    f.write(json.dumps(res))
+with jsonlines.open("tfidf_all.jsonl", "a") as writer:
+    for obj in res:
+        writer.write({obj:res[obj]})
+
+# with open("tfidf_all.json", "w") as f:
+#     f.write(json.dumps(res))
+
