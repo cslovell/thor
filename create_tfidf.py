@@ -160,56 +160,64 @@ with open("track1/" + "finish_len_" + str(len(res)), "w") as fi:
     fi.write("ok")
 
 
-with open("tfidf_all.json", "w") as f:
-    f.write(json.dumps(res)) # 423973
+# with open("tfidf_all.json", "w") as f:
+#     f.write(json.dumps(res)) # 423973
 
-id_dev = json.loads(open("ids_raw_dev.json").read())
-bin_y_dev_list = json.loads(open("bin_y_dev_list.json").read())
+with jsonlines.open("tfidf_all.jsonl", "a") as writer:
+    for i in res:
+        writer.write({i:res[i]})
 
-dict_list = []
-id_fail = []
-for i in id_dev:
-    try:
-        dict_list.append(res[i])
-    except:
-        id_fail.append(i)
-
-X = []
-if len(dict_list) == 29912:
-    with open("track1/" + "length_29912_normal", "w") as fi:
-        fi.write("ok")
-
-    # create sparse matrix
-    v = DictVectorizer()
-    X = v.fit_transform(dict_list)
-
-    # X: X, y = bin_y_dev_list
-    kf = KFold(n_splits=10)
-    result_vec = [0 for i in range(29912)]
-    for train_index, test_index in kf.split(X):
-        X_train = [X[i] for i in train_index]
-        y_train = [bin_y_dev_list[i] for i in train_index]
-        X_test = [X[i] for i in test_index]
-        y_test = [bin_y_dev_list[i] for i in test_index]
-
-        rid = RidgeCV()
-        ridModel = rid.fit(X_train, y_train)
-        y_predrid = rid.predict(X_test)
-
-        temp_count = 0
-        for i in test_index:
-            ndcg = custom_ndcg_score(y_test[temp_count], y_predrid[temp_count])
-            result_vec[i] = ndcg
-            temp_count += 1
-
-    with open("result_vec.json", "w") as fi:
-        fi.write(result_vec)
-else:
-    with open("track1/" + "something_wrong", "w") as fi:
-        fi.write("ok")
-
-with open("track1/" + "PROG_TO_END", "w") as fi:
+with open("track1/" + "finish_writing", "w") as fi:
     fi.write("ok")
+
+#
+# id_dev = json.loads(open("ids_raw_dev.json").read())
+# bin_y_dev_list = json.loads(open("bin_y_dev_list.json").read())
+#
+# dict_list = []
+# id_fail = []
+# for i in id_dev:
+#     try:
+#         dict_list.append(res[i])
+#     except:
+#         id_fail.append(i)
+#
+# X = []
+# if len(dict_list) == 29912:
+#     with open("track1/" + "length_29912_normal", "w") as fi:
+#         fi.write("ok")
+#
+#     # create sparse matrix
+#     v = DictVectorizer()
+#     X = v.fit_transform(dict_list)
+#
+#     # X: X, y = bin_y_dev_list
+#     kf = KFold(n_splits=10)
+#     result_vec = [0 for i in range(29912)]
+#     for train_index, test_index in kf.split(X):
+#         X_train = [X[i] for i in train_index]
+#         y_train = [bin_y_dev_list[i] for i in train_index]
+#         X_test = [X[i] for i in test_index]
+#         y_test = [bin_y_dev_list[i] for i in test_index]
+#
+#         rid = RidgeCV()
+#         ridModel = rid.fit(X_train, y_train)
+#         y_predrid = rid.predict(X_test)
+#
+#         temp_count = 0
+#         for i in test_index:
+#             ndcg = custom_ndcg_score(y_test[temp_count], y_predrid[temp_count])
+#             result_vec[i] = ndcg
+#             temp_count += 1
+#
+#     with open("result_vec.json", "w") as fi:
+#         fi.write(result_vec)
+# else:
+#     with open("track1/" + "something_wrong", "w") as fi:
+#         fi.write("ok")
+#
+# with open("track1/" + "PROG_TO_END", "w") as fi:
+#     fi.write("ok")
 
 
 
