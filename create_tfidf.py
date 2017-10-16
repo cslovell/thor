@@ -2,8 +2,10 @@ import math
 import numpy as np
 import jsonlines
 import json
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
 
-class tfidf2:
+class tfidf2(object):
   def __init__(self):
     self.documents = {} # {doc:{word:tfidf}} after call prep(), contains each doc name and its doc dict, the doc dict is {word:tfidf}
     self.corpus_dict = {} # {word:df}, contains all the words, and document frequency (df)
@@ -52,72 +54,14 @@ class tfidf2:
         self.documents[doc][i] *= self.idf[i]
     self.prepStatus = True
 
-  def similarities_by_name(self, queryName):
-    '''
-    Calculates cosine tfidf similarities w.r.t each doc in the corpus. Query by name existed. Returns a dict {docname:similarity_score} pairs.
-    :param queryName: query uuid
-    :return: sims: query word list's tfidf similarity to all documents in the corpus
-    '''
+  def get_tfidf(self):
+      if self.prepStatus:
+          return self.documents
+      else:
+          print "not prepared"
 
-    if self.prepStatus == False:
-      print "Not Prepared, pls call prep() first"
-      return
 
-    query_dict = self.documents[queryName]
 
-    # computing similarities
-    sims = {}
-    for doc in self.documents:
-      score = 0.0
-      doc_dict = self.documents[doc]
-
-      for k in query_dict: # k is each word in query dict
-        if k in doc_dict:
-          score += query_dict[k] * doc_dict[k]
-      score /= np.linalg.norm(np.array(query_dict.values())) * np.linalg.norm(np.array(doc_dict.values()))
-
-      sims[doc] = score
-
-    return sims
-
-  def similarities_by_wordlist(self, list_of_words):
-    '''
-    Calculates cosine tfidf similarities w.r.t each doc in the corpus. Query by new list of words. Returns a dict {docname:similarity_score} pairs.
-    :param list_of_words: a list of words
-    :return: sims: query word list's tfidf similarity to all documents in the corpus
-    '''
-
-    if self.prepStatus == False:
-      print "Not Prepared, pls call prep() first"
-      return
-
-    query_dict = {}
-    for w in list_of_words:
-      query_dict[w] = query_dict.get(w, 0.0) + 1.0  # if the word w exists, plus 1 to its value; if not exists, make its value 1
-
-    # calculate tfidf
-    # assume all the query words exist in idf !!!IMPORTANT!!!
-    length = float(len(list_of_words))
-    for k in query_dict:
-      query_dict[k] = (query_dict[k] / length) * self.idf[k]
-
-    # computing similarities
-    sims = {}
-    for doc in self.documents:
-      score = 0.0
-      doc_dict = self.documents[doc]
-
-      for k in query_dict:  # k is each word in query dict
-        if k in doc_dict:
-          score += query_dict[k] * doc_dict[k]
-      score /= np.linalg.norm(np.array(query_dict.values())) * np.linalg.norm(np.array(doc_dict.values()))
-
-      sims[doc] = score
-
-    return sims
-
-from nltk.tokenize import sent_tokenize
-from nltk.tokenize import word_tokenize
 class MTokenizer(object):
 
     @staticmethod
@@ -152,16 +96,21 @@ with jsonlines.open("reliefweb_corpus_raw_20160331_eng_duprm.jsonl") as reader:
         table.addDocument(obj["id"], MTokenizer.tokenize_string(obj["text"]))
         count += 1
         if count % 1000 == 0:
-            print count
+            with open("track1/" + str(count), "w") as fi:
+                fi.write("ok")
 
-print str(count) + " documents loaded..."
+with open("track1/" + "finish_load", "w") as fi:
+    fi.write("ok")
 
 table.prep()
-print "prep ready..."
 
-res = table.documents
+with open("track1/" + "finish_perp", "w") as fi:
+    fi.write("ok")
 
-print "size of output:" + str(len(res))
+res = table.get_tfidf()
+
+with open("track1/" + "finish_len_" + str(len(res)), "w") as fi:
+    fi.write("ok")
 
 with open("tfidf_all.json", "w") as f:
     f.write(json.dumps(res))
