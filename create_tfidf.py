@@ -151,15 +151,17 @@ with jsonlines.open("reliefweb_corpus_raw_20160331_eng_duprm.jsonl") as reader:
     for obj in reader:
         table.addDocument(obj["id"], MTokenizer.tokenize_string(obj["text"]))
         count += 1
-        if count % 10 == 0:
+        if count % 1000 == 0:
             print count
 
+print str(count) + " documents loaded..."
+
 table.prep()
-print "prep ready"
+print "prep ready..."
 
 res = table.documents
 
-print "size of output" + str(len(res))
+print "size of output:" + str(len(res))
 
 with open("tfidf_all.json", "w") as f:
     f.write(json.dumps(res))
