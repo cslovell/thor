@@ -5,6 +5,15 @@ import json
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 
+from sklearn.feature_extraction import DictVectorizer
+from sklearn.preprocessing import MultiLabelBinarizer
+import os
+import codecs
+import operator
+from sklearn.model_selection import KFold
+from sklearn.linear_model import RidgeCV
+
+
 class tfidf2(object):
   def __init__(self):
     self.documents = {} # {doc:{word:tfidf}} after call prep(), contains each doc name and its doc dict, the doc dict is {word:tfidf}
@@ -87,6 +96,51 @@ class MTokenizer(object):
 
        return word_tokens
 
+
+
+def custom_ndcg_score(y, y_pred):
+
+    # get index of all correct answers, and get smallest number among them
+    correct_index = set()
+    smallest = 1
+    for idx, label in enumerate(y):
+        if label == 1:
+            correct_index.add(idx)
+            if y_pred[idx] < smallest:
+                smallest = y_pred[idx]
+
+    # include value for correct indices and valued larger than smallest correct
+    index_and_val = {}
+    for idx, val in enumerate(y_pred):
+        if idx in correct_index:
+            index_and_val[idx] = y_pred[idx]
+        elif val > smallest:
+            index_and_val[idx] = y_pred[idx]
+
+    index_and_val = sorted(index_and_val.items(), key=operator.itemgetter(1), reverse=True)
+
+    #
+    pred_list = []
+    for idx, val in index_and_val:
+        if idx in correct_index:
+            pred_list.append(1)
+        else:
+            pred_list.append(0)
+
+    # idcg
+    idcg = 0
+    for idx in range(len(correct_index)):
+        idcg += 1 / np.log2(idx + 1 + 1)
+
+    # dcg
+    dcg = 0
+    for idx, score in enumerate(pred_list):
+        dcg += score / np.log2(idx + 1 + 1)
+
+    return dcg / idcg
+
+
+
 table = tfidf2()
 with jsonlines.open("reliefweb_corpus_raw_20160331_eng_duprm.jsonl") as reader:
     count = 0
@@ -105,9 +159,61 @@ res = table.prep()
 with open("track1/" + "finish_len_" + str(len(res)), "w") as fi:
     fi.write("ok")
 
-with jsonlines.open("tfidf_all.jsonl", "a") as writer:
-    for obj in res:
-        writer.write({obj:res[obj]})
+
+# with open("tfidf_all.json", "w") as f:
+#     f.write(json.dumps(res)) # 423973
+
+id_dev = json.loads(open("ids_raw_dev.json").read())
+bin_y_dev_list = json.loads(open("bin_y_dev_list.json").read())
+
+dict_list = []
+id_fail = []
+for i in id_dev:
+    try:
+        dict_list.append(res[i])
+    except:
+        id_fail.append(i)
+
+X = []
+if len(dict_list) == 29912:
+    with open("track1/" + "length_29912_normal", "w") as fi:
+        fi.write("ok")
+
+    # create sparse matrix
+    v = DictVectorizer()
+    X = v.fit_transform(dict_list)
+
+    # X: X, y = bin_y_dev_list
+    kf = KFold(n_splits=10)
+    result_vec = [0 for i in range(29912)]
+    for train_index, test_index in kf.split(X):
+        X_train = [X[i] for i in train_index]
+        y_train = [bin_y_dev_list[i] for i in train_index]
+        X_test = [X[i] for i in test_index]
+        y_test = [bin_y_dev_list[i] for i in test_index]
+
+        rid = RidgeCV()
+        ridModel = rid.fit(X_train, y_train)
+        y_predrid = rid.predict(X_test)
+
+        temp_count = 0
+        for i in test_index:
+            ndcg = custom_ndcg_score(y_test[temp_count], y_predrid[temp_count])
+            result_vec[i] = ndcg
+            temp_count += 1
+
+    with open("result_vec.json", "w") as fi:
+        fi.write(result_vec)
+else:
+    with open("track1/" + "something_wrong", "w") as fi:
+        fi.write("ok")
+
+with open("track1/" + "PROG_TO_END", "w") as fi:
+    fi.write("ok")
+
+
+
+
 
 # with open("tfidf_all.json", "w") as f:
 #     f.write(json.dumps(res))
