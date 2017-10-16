@@ -160,8 +160,8 @@ with open("track1/" + "finish_len_" + str(len(res)), "w") as fi:
     fi.write("ok")
 
 
-# with open("tfidf_all.json", "w") as f:
-#     f.write(json.dumps(res)) # 423973
+with open("tfidf_all.json", "w") as f:
+    f.write(json.dumps(res)) # 423973
 
 id_dev = json.loads(open("ids_raw_dev.json").read())
 bin_y_dev_list = json.loads(open("bin_y_dev_list.json").read())
