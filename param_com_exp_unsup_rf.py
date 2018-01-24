@@ -98,7 +98,7 @@ def get_param_comb_list(param):
 
 
 ###
-config = json.loads(open("config_local.json").read())
+config = json.loads(open("config.json").read())
 
 param_dict = config["param_dict"]
 num_labels = config["num_labels"]
