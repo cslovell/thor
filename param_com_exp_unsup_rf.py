@@ -166,9 +166,15 @@ for p_ind, p in enumerate(param_comb_list):
         clf.fit(X_train, y_train)
         y_predrid = clf.predict_proba(X_test)
 
+        # for random forest
+        y_predrid_format = [[0 for item2 in range(len(y_predrid))] for item1 in range(len(y_predrid[0]))]  # 2992 * 19
+        for class_idx, class_list in enumerate(y_predrid):  # class_idx is 0-18, class list's size is 2992 * 2
+            for sample_idx, i in enumerate(class_list):
+                y_predrid_format[sample_idx][class_idx] = i[1]
+
         temp_count = 0
         for i in test_index:
-            ndcg = custom_ndcg_score(y_test[temp_count], y_predrid[temp_count])
+            ndcg = custom_ndcg_score(y_test[temp_count], y_predrid_format[temp_count])
             result_matrix[p_ind][i] = ndcg
             temp_count += 1
 
