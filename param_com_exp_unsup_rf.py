@@ -164,7 +164,7 @@ for p_ind, p in enumerate(param_comb_list):
 
         clf = RandomForestClassifier()
         clf.fit(X_train, y_train)
-        y_predrid = clf.predict(X_test)
+        y_predrid = clf.predict_proba(X_test)
 
         temp_count = 0
         for i in test_index:
