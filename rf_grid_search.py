@@ -9,7 +9,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import ParameterGrid
 
-
+# custom_ndcg_score([1,0,1,0,0,1,0,0,0,0], [0,0,0,0,0,1,0,0,0,0])
 
 def custom_ndcg_score(y, y_pred):
 
@@ -22,7 +22,7 @@ def custom_ndcg_score(y, y_pred):
             if y_pred[idx] < smallest:
                 smallest = y_pred[idx]
 
-    # include value for correct indices and valued larger than smallest correct
+    # include value for correct indices and values larger than smallest correct
     index_and_val = {}
     for idx, val in enumerate(y_pred):
         if idx in correct_index:
@@ -99,7 +99,7 @@ def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix
     param_n_avg_ndcg = []
     best_ndcg = 0
     best_param = None
-    for idx, res in result_matrix:
+    for idx, res in enumerate(result_matrix):
         avg_ndcg = sum(res) / len(res)
         param_n_avg_ndcg.append({"params": param_list[idx], "avg_ndcg": avg_ndcg})
         if avg_ndcg > best_ndcg:
@@ -151,7 +151,7 @@ def train_ft(param_dict, input_filename, X_filename):
 
 y_filename = "y_rawlabels_dev.json"
 fasttext_dir = "/home/entitylinking/fastText"
-ft_param_dict_optimal = {"wordNgrams": 3, "lr": 0.05, "ws": 8} # sample
+ft_param_dict_optimal = {"wordNgrams": 5, "lr": 0.05, "ws": 8} # sample
 X_filename = "fastText_best_result.txt" # fastText best result file
 rf_parameters = {"n_estimators": [10, 20, 30, 40, 50], "criterion": ["gini", "entropy"],
                   "max_features": ["auto", "sqrt", "log2", None], "n_jobs": [-1]}
