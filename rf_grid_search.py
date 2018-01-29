@@ -153,8 +153,8 @@ y_filename = "y_rawlabels_dev.json"
 fasttext_dir = "/home/entitylinking/fastText"
 ft_param_dict_optimal = {"wordNgrams": 5, "lr": 0.05, "ws": 8} # sample
 X_filename = "fastText_best_result.txt" # fastText best result file
-rf_parameters = {"n_estimators": [10, 20, 30, 40, 50], "criterion": ["gini", "entropy"],
-                  "max_features": ["auto", "sqrt", "log2", None], "n_jobs": [-1]}
+rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "entropy"],
+                  "max_features": ["auto", "sqrt", "log2"], "n_jobs": [-1], "min_sample_leaf": [0.00001, 0.0001, 0.001]}
 
 train_ft(ft_param_dict_optimal, "data.unsup_all.txt", X_filename)
 (X, y) = input_process(X_filename, y_filename)
