@@ -63,10 +63,8 @@ X = v.fit_transform(dict_list)
 ###
 def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix_id="", track_folder="track3/"):
 
-    assert len(X) == len(y), "X and y dimension not match!"
-
     param_list = list(ParameterGrid(param_dict))
-    num_samples = len(X)
+    num_samples = len(y)
     num_param_comb = len(param_list) # number of parameter combinations, cross product of param list
     result_matrix = [[0 for j in range(num_samples)] for i in range(num_param_comb)]
     count_p = 0
