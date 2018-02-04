@@ -114,9 +114,12 @@ def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix
 
     return (best_param, best_ndcg, param_n_avg_ndcg)
 
-ID = "tfidf_1"
-rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "entropy"],
-                 "max_features": ["auto", "sqrt", "log2"], "n_jobs": [-1], "min_samples_leaf": [0.00001, 0.0001, 0.001]}
+ID = "tfidf_1000"
+rf_parameters = {"n_estimators": [1000], "criterion": ["gini"],
+                 "max_features": ["auto"], "n_jobs": [-1], "min_samples_leaf": [0.00001]}
+
+# rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "entropy"],
+#                  "max_features": ["auto", "sqrt", "log2"], "n_jobs": [-1], "min_samples_leaf": [0.00001, 0.0001, 0.001]}
 
 (best_param, best_ndcg, param_n_avg_ndcg) = custom_ndcg_grid_search_cv(RandomForestClassifier, X, bin_y_dev_ready, rf_parameters, matrix_id=ID)
 
