@@ -170,7 +170,7 @@ rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "
 
 # for walk
 X_walk = json.loads(open("X_walk.json").read())
-y_walk = json.loads(open("y_walk.json").read())
+y_walk = json.loads(open("y_walk_binary.json").read())
 
 (best_param, best_ndcg, param_n_avg_ndcg) = custom_ndcg_grid_search_cv(RandomForestClassifier, X_walk, y_walk, rf_parameters, matrix_id=ID)
 
