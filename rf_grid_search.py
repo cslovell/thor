@@ -149,7 +149,7 @@ def train_ft(param_dict, input_filename, X_filename):
 
     os.system(fasttext_dir + "/fasttext print-sentence-vectors model.bin < data.unsup_all.txt > " + X_filename)
 
-ID = "1000"
+ID = "walk_500"
 y_filename = "y_rawlabels_dev.json"
 fasttext_dir = "/home/entitylinking/fastText"
 ft_param_dict_optimal = {"wordNgrams": 5, "lr": 0.05, "ws": 8} # sample
@@ -157,15 +157,22 @@ X_filename = "fastText_best_result.txt" # fastText best result file
 
 
 # round 1 param comb
-# rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "entropy"],
-#                   "max_features": ["auto", "sqrt", "log2"], "n_jobs": [-1], "min_samples_leaf": [0.00001, 0.0001, 0.001]}
+rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "entropy"],
+                  "max_features": ["auto", "sqrt", "log2"], "n_jobs": [-1], "min_samples_leaf": [0.00001, 0.0001, 0.001]}
 
-# round 2 param comb
-rf_parameters = {"n_estimators": [1000], "criterion": ["gini"], "max_features": ["auto"], "n_jobs": [-1], "min_samples_leaf": [0.00001]}
+# # round 2 param comb
+# rf_parameters = {"n_estimators": [1000], "criterion": ["gini"], "max_features": ["auto"], "n_jobs": [-1], "min_samples_leaf": [0.00001]}
 
 # train_ft(ft_param_dict_optimal, "data.unsup_all.txt", X_filename) -> fasttest best results already in "fastText_best_result.txt"
-(X, y) = input_process(X_filename, y_filename)
-(best_param, best_ndcg, param_n_avg_ndcg) = custom_ndcg_grid_search_cv(RandomForestClassifier, X, y, rf_parameters, matrix_id=ID)
+
+# for FastText
+# (X, y) = input_process(X_filename, y_filename)
+
+# for walk
+X_walk = json.loads(open("X_walk.json").read())
+y_walk = json.loads(open("y_walk.json").read())
+
+(best_param, best_ndcg, param_n_avg_ndcg) = custom_ndcg_grid_search_cv(RandomForestClassifier, X_walk, y_walk, rf_parameters, matrix_id=ID)
 
 ret = {"best_param": best_param, "best_ndcg": best_ndcg, "param_n_avg_ndcg": param_n_avg_ndcg}
 
