@@ -70,7 +70,7 @@ count = 0
 with open("track1/" + "ready_to_start" + str(count), "w") as fi:
     fi.write("ok")
 
-best_result_record = [[] for j in y]
+best_result_record = [[] for j in bin_y_dev_ready]
 
 for train_index, test_index in kf.split(X):
     X_train = vstack([X[i] for i in train_index], "csr")
