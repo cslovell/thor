@@ -64,6 +64,8 @@ def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix
     result_matrix = [[0 for j in range(num_samples)] for i in range(num_param_comb)]
     count_p = 0
 
+    best_result_record = [[] for j in y] # for single iteration
+
     for p_ind, param in enumerate(param_list):
 
         kf = KFold(n_splits=10)
@@ -87,10 +89,15 @@ def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix
             for idx, t_idx in enumerate(test_index):
                 ndcg = custom_ndcg_score(y_test[idx], y_predrid_format[idx])
                 result_matrix[p_ind][t_idx] = ndcg
+                best_result_record[t_idx] = list(y_predrid_format[idx])
 
         count_p += 1
         with open(track_folder + str(count_p) + "_" + str(len(param_list)), "w") as fi:
             fi.write("ok")
+
+    # for single iteration
+    with open("detail_proba_" + matrix_id + ".json", "w") as f:
+        f.write(json.dumps(best_result_record))
 
     if save_matrix:
         with open("ndcg_grid_matrix_" + matrix_id + ".json", "w") as f:
@@ -149,7 +156,7 @@ def train_ft(param_dict, input_filename, X_filename):
 
     os.system(fasttext_dir + "/fasttext print-sentence-vectors model.bin < data.unsup_all.txt > " + X_filename)
 
-ID = "walk_500"
+ID = "rf_ft_1000_best"
 y_filename = "y_rawlabels_dev.json"
 fasttext_dir = "/home/entitylinking/fastText"
 ft_param_dict_optimal = {"wordNgrams": 5, "lr": 0.05, "ws": 8} # sample
@@ -157,22 +164,22 @@ X_filename = "fastText_best_result.txt" # fastText best result file
 
 
 # round 1 param comb
-rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "entropy"],
-                  "max_features": ["auto", "sqrt", "log2"], "n_jobs": [-1], "min_samples_leaf": [0.00001, 0.0001, 0.001]}
+# rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "entropy"],
+#                   "max_features": ["auto", "sqrt", "log2"], "n_jobs": [-1], "min_samples_leaf": [0.00001, 0.0001, 0.001]}
 
 # # round 2 param comb
-# rf_parameters = {"n_estimators": [1000], "criterion": ["gini"], "max_features": ["auto"], "n_jobs": [-1], "min_samples_leaf": [0.00001]}
+rf_parameters = {"n_estimators": [1000], "criterion": ["gini"], "max_features": ["auto"], "n_jobs": [-1], "min_samples_leaf": [0.00001]}
 
-# train_ft(ft_param_dict_optimal, "data.unsup_all.txt", X_filename) -> fasttest best results already in "fastText_best_result.txt"
+# train_ft(ft_param_dict_optimal, "data.unsup_all.txt", X_filename) # -> fasttest best results already in "fastText_best_result.txt"
 
 # for FastText
-# (X, y) = input_process(X_filename, y_filename)
+(X, y) = input_process(X_filename, y_filename)
 
 # for walk
-X_walk = json.loads(open("X_walk.json").read())
-y_walk = json.loads(open("y_walk_binary.json").read())
+# X_walk = json.loads(open("X_walk.json").read())
+# y_walk = json.loads(open("y_walk_binary.json").read())
 
-(best_param, best_ndcg, param_n_avg_ndcg) = custom_ndcg_grid_search_cv(RandomForestClassifier, X_walk, y_walk, rf_parameters, matrix_id=ID)
+(best_param, best_ndcg, param_n_avg_ndcg) = custom_ndcg_grid_search_cv(RandomForestClassifier, X, y, rf_parameters, matrix_id=ID)
 
 ret = {"best_param": best_param, "best_ndcg": best_ndcg, "param_n_avg_ndcg": param_n_avg_ndcg}
 
