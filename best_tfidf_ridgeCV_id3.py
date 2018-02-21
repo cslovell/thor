@@ -91,7 +91,7 @@ for train_index, test_index in kf.split(X):
 
     count += 1
     with open("track1/" + "finish_" + str(count), "w") as fi:
-    fi.write("ok")
+        fi.write("ok")
 
 
 best_result_record_ordered = []
