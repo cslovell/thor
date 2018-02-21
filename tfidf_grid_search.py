@@ -69,6 +69,8 @@ def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix
     result_matrix = [[0 for j in range(num_samples)] for i in range(num_param_comb)]
     count_p = 0
 
+    best_result_record = [[] for j in y]  # for single iteration
+
     for p_ind, param in enumerate(param_list):
 
         kf = KFold(n_splits=10)
@@ -92,10 +94,14 @@ def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix
             for idx, t_idx in enumerate(test_index):
                 ndcg = custom_ndcg_score(y_test[idx], y_predrid_format[idx])
                 result_matrix[p_ind][t_idx] = ndcg
+                best_result_record[t_idx] = list(y_predrid_format[idx])
 
         count_p += 1
         with open(track_folder + str(count_p) + "_" + str(len(param_list)), "w") as fi:
             fi.write("ok")
+
+    with open("detail_proba_" + matrix_id + ".json", "w") as f:
+        f.write(json.dumps(best_result_record))
 
     if save_matrix:
         with open("ndcg_grid_matrix_" + matrix_id + ".json", "w") as f:
@@ -114,7 +120,7 @@ def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix
 
     return (best_param, best_ndcg, param_n_avg_ndcg)
 
-ID = "tfidf_1000"
+ID = "rf_tfidf_1000_best"
 rf_parameters = {"n_estimators": [1000], "criterion": ["gini"],
                  "max_features": ["auto"], "n_jobs": [-1], "min_samples_leaf": [0.00001]}
 
