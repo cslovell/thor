@@ -110,28 +110,30 @@ def custom_ndcg_grid_search_cv(model, X, y, param_dict, save_matrix=True, matrix
 
 ID = "D3_2"
 rf_parameters = {"n_estimators": [1000], "criterion": ["gini"],
-                 "max_features": ["auto"], "n_jobs": [-1], "min_samples_leaf": [0.00001]}
+                 "max_features": ["auto"], "n_jobs": [-1], "min_samples_leaf": [0.00001], "random_state": [2]}
 
 # rf_parameters = {"n_estimators": [10, 20, 50, 100, 500], "criterion": ["gini", "entropy"],
 #                  "max_features": ["auto", "sqrt", "log2"], "n_jobs": [-1], "min_samples_leaf": [0.00001, 0.0001, 0.001]}
 
 result_matrix, best_result_record = custom_ndcg_grid_search_cv(RandomForestClassifier, X, bin_y_dev_list, rf_parameters, matrix_id=ID)
 
+with open("result_lbl_n_prob_best_tfidf_rf_id5x_10_unprocessed.json", "w") as f: ##need change
+    f.write(json.dumps(best_result_record))
 
-ndcg_record = result_matrix[0]
-best_result_record_ordered = []
-# class_labels = json.loads(open("class_labels_19.json").read())
-
-for i in best_result_record:
-    temp = []
-    for j in range(19):
-        temp.append([class_labels[j], i[j]])
-    temp.sort(key=lambda x:x[1], reverse=True)
-    best_result_record_ordered.append(temp)
-
-
-with open("result_lbl_n_prob_best_tfidf_rf_id5x_10_D3_2.json", "w") as f: ##need change
-    f.write(json.dumps(best_result_record_ordered))
-
-with open("result_ndcg_best_tfidf_rf_id5x_10_D3_2.json", "w") as f: ##need change
-    f.write(json.dumps(ndcg_record))
+# ndcg_record = result_matrix[0]
+# best_result_record_ordered = []
+# # class_labels = json.loads(open("class_labels_19.json").read())
+#
+# for i in best_result_record:
+#     temp = []
+#     for j in range(19):
+#         temp.append([class_labels[j], i[j]])
+#     temp.sort(key=lambda x:x[1], reverse=True)
+#     best_result_record_ordered.append(temp)
+#
+#
+# with open("result_lbl_n_prob_best_tfidf_rf_id5x_10_D3_2.json", "w") as f: ##need change
+#     f.write(json.dumps(best_result_record_ordered))
+#
+# with open("result_ndcg_best_tfidf_rf_id5x_10_D3_2.json", "w") as f: ##need change
+#     f.write(json.dumps(ndcg_record))
