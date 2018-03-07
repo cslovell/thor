@@ -65,12 +65,12 @@ Here is a flow chart illustrates the working pipeline:
 ![link1](https://s3-us-west-2.amazonaws.com/zhttestbucket/thor_flow.png)  
 
 ## Key Technology Used ##
-1. For __Document Vector Embedding__, we used Facebook FastText (https://github.com/facebookresearch/fastText).  
-2. For __TFIDF vector embeddings__, we use TFIDF package developed by myself (https://github.com/zhtpandog/tfidf). For extramely large-scale TFIDF classification, we also use sparse matrix in scipy package (https://github.com/scipy/scipy/blob/master/scipy/sparse/csr.py).  
-3. For Entity extraction, we use spaCy (https://github.com/explosion/spaCy).  
-4. For random walk embeddings, we use DeepWalk (https://github.com/phanein/deepwalk) and NetworkX (https://github.com/networkx/networkx).  
-5. For Machine Learning models, we use scikit-learn (https://github.com/scikit-learn/scikit-learn).  
-6. For various evaluation metrics, we use scikit-learn metrics module (https://github.com/scikit-learn/scikit-learn/tree/master/sklearn/metrics) as well as custom metrics developed by myself such as NDCG.  
+1. For __Document Vector Embedding__, we use Facebook FastText (https://github.com/facebookresearch/fastText).  
+2. For __TFIDF Vector Embeddings__, we use TFIDF package developed by myself (https://github.com/zhtpandog/tfidf). For extramely large-scale TFIDF classification, we also use sparse matrix in scipy package (https://github.com/scipy/scipy/blob/master/scipy/sparse/csr.py).  
+3. For __Entity Extraction__, we use spaCy (https://github.com/explosion/spaCy).  
+4. For __Random Walk Embeddings,__ we use DeepWalk (https://github.com/phanein/deepwalk) and NetworkX (https://github.com/networkx/networkx).  
+5. For __Machine Learning__ models, we use scikit-learn (https://github.com/scikit-learn/scikit-learn).  
+6. For various __Evaluation Metrics__, we use scikit-learn metrics module (https://github.com/scikit-learn/scikit-learn/tree/master/sklearn/metrics) as well as custom metrics developed by myself such as NDCG.  
 
 ## Key ML Models Implemented ##
 1. Supervised FastText document embedding classification.  
