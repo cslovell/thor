@@ -64,6 +64,25 @@ The main fields this repo interested in are "text" and "theme". Our goal is to l
 Here is a flow chart illustrates the working pipeline:  
 ![link1](https://s3-us-west-2.amazonaws.com/zhttestbucket/thor_flow.png)  
 
+## Key Technology Used ##
+1. For __Document Vector Embedding__, we used Facebook FastText (https://github.com/facebookresearch/fastText).  
+2. For __TFIDF vector embeddings__, we use TFIDF package developed by myself (https://github.com/zhtpandog/tfidf). For extramely large-scale TFIDF classification, we also use sparse matrix in scipy package (https://github.com/scipy/scipy/blob/master/scipy/sparse/csr.py).  
+3. For Entity extraction, we use spaCy (https://github.com/explosion/spaCy).  
+4. For random walk embeddings, we use DeepWalk (https://github.com/phanein/deepwalk) and NetworkX (https://github.com/networkx/networkx).  
+5. For Machine Learning models, we use scikit-learn (https://github.com/scikit-learn/scikit-learn).  
+6. For various evaluation metrics, we use scikit-learn metrics module (https://github.com/scikit-learn/scikit-learn/tree/master/sklearn/metrics) as well as custom metrics developed by myself such as NDCG.  
+
+## Key ML Models Implemented ##
+1. Supervised FastText document embedding classification.  
+2. Unsupervised FastText document embedding + RidgeCV classification.  
+3. Unsupervised FastText document embedding + Random Forest classification.  
+4. TFIDF vectors + RidgeCV classification.  
+5. TFIDF vectors + Random Forest classification.  
+6. Random Walk on Bipartite Knowledge Graph Embeddings + RidgeCV classification.  
+7. Random Walk on Bipartite Knowledge Graph Embeddings + Random Forest classification.  
+  
+Since the project is undergoing, and many of the contents are classified (required by DARPA), so detailed experimental data and actual codebase (this repo is just for personal experimentation while the official repo is private) cannot be revealed for the time being.  
+
 
 
 
